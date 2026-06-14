@@ -3,7 +3,7 @@ import { componentRegistry } from '@game-center/components';
 import type { PageComponent } from '@game-center/types';
 import { ErrorBoundary } from './ErrorBoundary';
 import { DataProvider } from './DataProvider';
-import type { GameInfo } from '@game-center/components';
+import type { GameInfo } from '@game-center/types';
 
 /**
  * Props for the SchemaRenderer component.
@@ -63,13 +63,24 @@ export function SchemaRenderer({
   return (
     <div className="schema-renderer space-y-4 pb-8">
       {sorted.map((comp) => {
-        // 2. Parse props from JSON string
+        // 2. Extract props — backend returns `props` as object, or `propsJson` as JSON string
         let parsed: ParsedComponentProps;
+        const rawProps = (comp as unknown as Record<string, unknown>).props;
+        const rawPropsJson = comp.propsJson;
         try {
-          parsed = JSON.parse(comp.propsJson) as ParsedComponentProps;
+          if (typeof rawProps === 'object' && rawProps !== null) {
+            parsed = rawProps as ParsedComponentProps;
+          } else if (typeof rawPropsJson === 'string') {
+            parsed = JSON.parse(rawPropsJson) as ParsedComponentProps;
+          } else {
+            console.warn(
+              `[SchemaRenderer] No props found for component "${comp.type}" (id: ${comp.id})`,
+            );
+            return null;
+          }
         } catch {
           console.warn(
-            `[SchemaRenderer] Failed to parse propsJson for component "${comp.type}" (id: ${comp.id})`,
+            `[SchemaRenderer] Failed to parse props for component "${comp.type}" (id: ${comp.id})`,
           );
           return null;
         }

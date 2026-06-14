@@ -66,10 +66,12 @@ export function usePageData(slug: string, isDraft?: boolean): UsePageDataResult 
           throw new Error(`请求失败 (${response.status})`);
         }
 
-        const data: PageSchema = await response.json();
+        const raw = await response.json();
+        // API wraps responses in { data: ... }
+        const pageData: PageSchema = raw.data ?? raw;
 
         if (!cancelled) {
-          setPage(data);
+          setPage(pageData);
           setError(null);
         }
       } catch (err) {

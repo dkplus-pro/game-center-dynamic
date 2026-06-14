@@ -97,7 +97,7 @@ export function PreviewCanvas(): React.JSX.Element {
    */
   function getActiveLabel(): string {
     if (!activeType) return '';
-    const item = componentList.find((c) => c.type === activeType);
+    const item = componentList.find((c: { type: string; label: string; icon: string }) => c.type === activeType);
     return item ? `${item.icon} ${item.label}` : activeType;
   }
 

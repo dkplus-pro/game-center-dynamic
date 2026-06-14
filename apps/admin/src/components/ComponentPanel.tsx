@@ -16,7 +16,7 @@ export function ComponentPanel(): React.JSX.Element {
 
       {/* Component list */}
       <div className="flex-1 p-3 space-y-2">
-        {componentList.map((item) => (
+        {componentList.map((item: { type: string; label: string; icon: string }) => (
           <DraggableComponentItem key={item.type} type={item.type} label={item.label} icon={item.icon} />
         ))}
       </div>

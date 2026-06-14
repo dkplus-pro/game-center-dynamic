@@ -1,5 +1,5 @@
 import React from 'react';
-import type { GameInfo } from '@game-center/components';
+import type { GameInfo } from '@game-center/types';
 
 /**
  * Props for the DataProvider component.
