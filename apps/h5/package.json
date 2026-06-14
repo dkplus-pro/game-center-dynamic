@@ -6,7 +6,9 @@
     "dev": "modern dev",
     "build": "modern build",
     "test": "vitest run",
-    "lint": "eslint src --ext .ts,.tsx"
+    "lint": "eslint src --ext .ts,.tsx",
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui"
   },
   "dependencies": {
     "@game-center/components": "workspace:*",
@@ -16,8 +18,10 @@
     "@modern-js/app-tools": "^2.60.0",
     "@modern-js/plugin-tailwindcss": "^2.60.0",
     "@modern-js/runtime": "^2.60.0",
+    "@playwright/test": "^1.60.0",
     "@types/react": "^18.3.0",
     "@types/react-dom": "^18.3.0",
+    "playwright": "^1.60.0",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
     "tailwindcss": "^3.4.0",
