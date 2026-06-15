@@ -161,6 +161,21 @@ interface SortableCanvasItemProps {
 }
 
 /**
+ * Merge component props with schema defaults to fill missing values.
+ * This prevents render crashes when required props are undefined.
+ */
+function mergeProps(
+  type: string,
+  props: Record<string, unknown>,
+): Record<string, unknown> {
+  const entry = componentRegistry[type];
+  if (!entry) return props ?? {};
+  const defaults = entry.schema.defaultProps as Record<string, unknown> | undefined;
+  if (!defaults) return props ?? {};
+  return { ...defaults, ...props };
+}
+
+/**
  * A single sortable component rendered on the canvas.
  * Wraps the actual component from the registry and provides
  * click-to-select and drag-to-reorder functionality.
@@ -177,6 +192,7 @@ function SortableCanvasItem({ component, isSelected, onSelect }: SortableCanvasI
 
   const entry = componentRegistry[component.type];
   const Comp = entry?.component;
+  const mergedProps = mergeProps(component.type, component.props as Record<string, unknown>);
 
   /**
    * Handle click on the component wrapper to select it.
@@ -215,7 +231,7 @@ function SortableCanvasItem({ component, isSelected, onSelect }: SortableCanvasI
 
       {/* Render the actual component */}
       {Comp ? (
-        <Comp {...component.props} data={[]} />
+        <Comp {...mergedProps} data={(mergedProps.data as never) ?? []} />
       ) : (
         <div className="p-4 text-sm text-red-400">未知组件: {component.type}</div>
       )}

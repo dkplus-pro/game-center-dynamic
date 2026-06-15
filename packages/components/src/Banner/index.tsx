@@ -22,16 +22,17 @@ export interface BannerProps {
  * - Empty state placeholder when no images provided
  */
 export function Banner({
-  images,
-  autoplay,
-  interval,
+  images = [],
+  autoplay = true,
+  interval = 3000,
   height = 200,
 }: BannerProps): React.JSX.Element {
+  const safeImages = images ?? [];
   const [currentIndex, setCurrentIndex] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   /** Total number of images (0 if empty array). */
-  const total = images.length;
+  const total = safeImages.length;
 
   /**
    * Advance to the next image (wraps around to start).
@@ -90,7 +91,7 @@ export function Banner({
         className="flex h-full transition-transform duration-500 ease-in-out"
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
-        {images.map((src, index) => (
+        {safeImages.map((src, index) => (
           <div key={index} className="h-full w-full shrink-0">
             <img
               src={src}
@@ -128,7 +129,7 @@ export function Banner({
       {/* Indicator dots */}
       {total > 1 && (
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
-          {images.map((_, index) => (
+          {safeImages.map((_, index) => (
             <button
               key={index}
               type="button"
